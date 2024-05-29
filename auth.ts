@@ -33,7 +33,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         });
 
         if (user && bcrypt.compareSync(credentials.password, user.password)) {
-          return { id: user.id.toString(), email: user.email, name: user.name };
+          return {
+            id: user.id.toString(),
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
         } else {
           return null;
         }
@@ -50,13 +55,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
+        token.id = user.id as string;
+        token.role = user.role;
       }
       return token;
     },
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string;
+        session.user.role = token.role as string;
       }
       return session;
     },
