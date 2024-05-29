@@ -1,5 +1,6 @@
 import { auth, signOut } from '@/auth';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const Protected = async () => {
   const session = await auth();
@@ -14,6 +15,7 @@ const Protected = async () => {
       >
         <Button type='submit'>Disconnect</Button>
       </form>
+      <Link href='/admin'>Go to Admin Panel</Link>
     </div>
   );
 };
