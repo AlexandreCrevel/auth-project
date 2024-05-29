@@ -15,5 +15,13 @@ export const signUpSchema = signInSchema.merge(
   })
 );
 
+export const userSchema = z.object({
+  id: z.string().or(z.number()),
+  email: z.string(),
+  name: z.string(),
+  role: z.string(),
+});
+
 export type SignInSchemaType = z.infer<typeof signInSchema>;
 export type SignUpSchemaType = z.infer<typeof signUpSchema>;
+export type UserType = z.infer<typeof userSchema>;
