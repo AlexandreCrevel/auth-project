@@ -1,12 +1,19 @@
-'use client';
+import { auth, signOut } from '@/auth';
 import { Button } from '@/components/ui/button';
-import { signOut } from 'next-auth/react';
 
-const Protected = () => {
+const Protected = async () => {
+  const session = await auth();
   return (
-    <div>
-      Protected
-      <Button onClick={async () => await signOut()}>Click</Button>
+    <div className='flex h-screen w-screen items-center justify-center flex-col'>
+      Welcome {session?.user?.name}
+      <form
+        action={async () => {
+          'use server';
+          await signOut();
+        }}
+      >
+        <Button type='submit'>Disconnect</Button>
+      </form>
     </div>
   );
 };
