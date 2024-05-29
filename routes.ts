@@ -1,6 +1,6 @@
 export const publicRoutes = ['/public', '/posts'];
 
-export const authRoutes = ['/auth', '/login'];
+export const authRoutes = ['/signin', '/signup'];
 
 export const protectedRoutes = ['/protected'];
 
