@@ -33,3 +33,15 @@ export const changeUserRole = async (id: string, role: string) => {
     return null;
   }
 };
+
+export const deleteUser = async (id: string) => {
+  try {
+    const user = await prisma.user.delete({
+      where: { id: Number(id) },
+    });
+    return user;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};

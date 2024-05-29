@@ -1,8 +1,11 @@
 import { UserType } from '@/schemas/auth';
 import { ColumnDef } from '@tanstack/react-table';
-import { RoleSelect } from './CustomCells';
+import { FunctionsCells, RoleSelect } from './CustomCells';
 
-export const columns: ColumnDef<UserType>[] = [
+export const createColumns = (
+  handleRoleChange: (id: string, newRole: string) => void,
+  handleDeleteUser: (id: string) => void
+): ColumnDef<UserType>[] => [
   {
     accessorKey: 'id',
     header: 'ID',
@@ -19,7 +22,21 @@ export const columns: ColumnDef<UserType>[] = [
     accessorKey: 'role',
     header: 'Role',
     cell: ({ row }) => (
-      <RoleSelect id={row.original.id.toString()} role={row.original.role} />
+      <RoleSelect
+        id={row.original.id.toString()}
+        role={row.original.role}
+        onChangeRole={handleRoleChange}
+      />
     ),
+  },
+  {
+    header: ' ',
+    cell: (info) => (
+      <FunctionsCells
+        rowID={info.row.original.id.toString()}
+        onDelete={handleDeleteUser}
+      />
+    ),
+    enableSorting: false,
   },
 ];

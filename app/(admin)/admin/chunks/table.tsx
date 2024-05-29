@@ -1,4 +1,5 @@
 'use client';
+import { changeUserRole, deleteUser, getAllUsers } from '@/app/actions/admin';
 import { Button } from '@/components/ui/button';
 import { UserType } from '@/schemas/auth';
 import {
@@ -9,11 +10,47 @@ import {
   type SortingState,
 } from '@tanstack/react-table';
 import { ArrowDownAZ, ArrowUpZA } from 'lucide-react';
-import { useState } from 'react';
-import { columns } from './TableHeader';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { createColumns } from './TableHeader';
 
-const AdminTable = ({ data }: { data: UserType[] }) => {
+const AdminTable = () => {
+  const [data, setData] = useState<UserType[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const users = await getAllUsers();
+      setData(users);
+    };
+    fetchData();
+  }, []);
+
+  const handleRoleChange = async (id: string, newRole: string) => {
+    const updatedUser = await changeUserRole(id, newRole);
+    if (updatedUser) {
+      setData((prevData) =>
+        prevData.map((user) =>
+          user.id === id ? { ...user, role: newRole } : user
+        )
+      );
+      toast.success(`${updatedUser.name} role changed to ${newRole}`);
+    } else {
+      toast.error(`Failed to change user ${id} role`);
+    }
+  };
+
+  const handleDeleteUser = async (id: string) => {
+    const deletedUser = await deleteUser(id);
+    if (deletedUser) {
+      setData((prevData) => prevData.filter((user) => user.id !== id));
+      toast.success(`${id} has been deleted`);
+    } else {
+      toast.error(`Failed to delete user ${id}`);
+    }
+  };
+
+  const columns = createColumns(handleRoleChange, handleDeleteUser);
 
   const table = useReactTable({
     columns,
@@ -27,7 +64,7 @@ const AdminTable = ({ data }: { data: UserType[] }) => {
   });
 
   return (
-    <table>
+    <table className='w-full'>
       <thead>
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>

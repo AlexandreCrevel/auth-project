@@ -1,19 +1,21 @@
-import { changeUserRole } from '@/app/actions/admin';
+import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import { toast } from 'react-hot-toast';
 
-export const RoleSelect = ({ id, role }: { id: string; role: string }) => {
+export const RoleSelect = ({
+  id,
+  role,
+  onChangeRole,
+}: {
+  id: string;
+  role: string;
+  onChangeRole: (id: string, newRole: string) => void;
+}) => {
   const [selectedRole, setSelectedRole] = useState(role);
 
   const handleChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newRole = event.target.value;
     setSelectedRole(newRole);
-    const changeRole = await changeUserRole(id, newRole);
-    if (changeRole) {
-      toast.success(`${id} role changed to ${newRole}`);
-    } else {
-      toast.error(`Failed to change user ${id} role`);
-    }
+    onChangeRole(id, newRole);
   };
 
   return (
@@ -26,5 +28,21 @@ export const RoleSelect = ({ id, role }: { id: string; role: string }) => {
       <option value='user'>User</option>
       <option value='admin'>Admin</option>
     </select>
+  );
+};
+
+export const FunctionsCells = ({
+  rowID,
+  onDelete,
+}: {
+  rowID: string;
+  onDelete: (id: string) => void;
+}) => {
+  return (
+    <div className='flex flex-row justify-start gap-2'>
+      <Button variant={'ghost'} onClick={() => onDelete(rowID)}>
+        Delete
+      </Button>
+    </div>
   );
 };
