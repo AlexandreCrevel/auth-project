@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import AdminTable from './chunks/table';
+import AdminTable from './chunks/AdminTable';
 
 const Admin = async () => {
   return (

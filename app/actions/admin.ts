@@ -45,3 +45,20 @@ export const deleteUser = async (id: string) => {
     return null;
   }
 };
+
+export const updateUserField = async (
+  id: string,
+  newValue: string,
+  field: string
+) => {
+  try {
+    const user = await prisma.user.update({
+      where: { id: Number(id) },
+      data: { [field]: newValue },
+    });
+    return user;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};

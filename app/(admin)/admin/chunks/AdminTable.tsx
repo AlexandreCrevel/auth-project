@@ -1,5 +1,10 @@
 'use client';
-import { changeUserRole, deleteUser, getAllUsers } from '@/app/actions/admin';
+import {
+  changeUserRole,
+  deleteUser,
+  getAllUsers,
+  updateUserField,
+} from '@/app/actions/admin';
 import { Button } from '@/components/ui/button';
 import { UserType } from '@/schemas/auth';
 import {
@@ -50,7 +55,21 @@ const AdminTable = () => {
     }
   };
 
-  const columns = createColumns(handleRoleChange, handleDeleteUser);
+  const handleSave = async (id: string, newValue: string, field: string) => {
+    const updatedUser = await updateUserField(id, newValue, field);
+    if (updatedUser) {
+      setData((prevData) =>
+        prevData.map((user) =>
+          user.id === id ? { ...user, [field]: newValue } : user
+        )
+      );
+      toast.success(`${field} updated to ${newValue}`);
+    } else {
+      toast.error(`Failed to update ${field} for user ${id}`);
+    }
+  };
+
+  const columns = createColumns(handleRoleChange, handleDeleteUser, handleSave);
 
   const table = useReactTable({
     columns,

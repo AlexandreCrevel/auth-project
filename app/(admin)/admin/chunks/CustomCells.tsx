@@ -46,3 +46,49 @@ export const FunctionsCells = ({
     </div>
   );
 };
+
+export const EditableCell = ({
+  id,
+  value,
+  field,
+  onSave,
+}: {
+  id: string;
+  value: string;
+  field: string;
+  onSave: (id: string, newValue: string, field: string) => void;
+}) => {
+  const [editValue, setEditValue] = useState(value);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEditValue(event.target.value);
+  };
+
+  const handleSave = () => {
+    onSave(id, editValue, field);
+    setIsEditing(false);
+  };
+
+  return (
+    <div className='flex items-center'>
+      <input
+        type='text'
+        value={editValue}
+        onChange={handleChange}
+        className='border p-1 flex-grow'
+        disabled={!isEditing}
+        placeholder='Enter new value'
+      />
+      {isEditing ? (
+        <Button onClick={handleSave} className='ml-2'>
+          Save
+        </Button>
+      ) : (
+        <Button onClick={() => setIsEditing(true)} className='ml-2'>
+          Edit
+        </Button>
+      )}
+    </div>
+  );
+};
